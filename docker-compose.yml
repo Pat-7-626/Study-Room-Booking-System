@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "8001:8000"
+    depends_on:
+      - mongodb
+
+  user-service:
+    build: ./services/user-service
+    ports:
+      - "8002:8000"
+    depends_on:
+      - mongodb
+
+  room-service:
+    build: ./services/room-service
+    ports:
+      - "8003:8000"
+    depends_on:
+      - mongodb
+
+  reservation-service:
+    build: ./services/reservation-service
+    ports:
+      - "8004:8000"
+    depends_on:
+      - mongodb
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - auth-service
+      - room-service
+      - reservation-service
