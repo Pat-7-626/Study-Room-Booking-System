@@ -74,7 +74,7 @@ def reserve(data: dict = Body(...), user=Depends(get_user)):
     data["res_id"] = str(uuid.uuid4())
     res.insert_one(data)
 
-    return {"msg": "reserved"}
+    return {"msg": "reserved", "res_id": data["res_id"]}
 
 
 @app.put("/reserve/{res_id}")
