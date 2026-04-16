@@ -123,7 +123,6 @@ pytest -v tests/integration_test.py
 
 - **Limitations**: No physical access control, requires internet connection.
 - **Future Improvements**:
-  - Add calendar-based UI for slot selection.
   - Implement real-time updates via WebSockets.
   - Add an analytics dashboard for room usage statistics.
 
