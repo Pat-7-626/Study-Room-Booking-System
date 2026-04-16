@@ -22,13 +22,14 @@ def register(data: dict):
         "password": pwd.hash(data["password"]),
         "role": data.get("role", "member")
     })
-    return {"msg": "registered"}
+
+    return {"msg": "User created"}
 
 @app.post("/login")
 def login(data: dict):
     user = users.find_one({"email": data["email"]})
     if not user or not pwd.verify(data["password"], user["password"]):
-        raise HTTPException(401, "Invalid")
+        raise HTTPException(401, "Invalid credentials")
 
     token = jwt.encode({
         "email": user["email"],

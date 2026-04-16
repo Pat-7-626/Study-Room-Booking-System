@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #9333ea;
+  --color-primary-dark: #7e22ce;
+  --color-secondary: #f43f5e;
+  --color-secondary-dark: #e11d48;
+  --color-bg-dark: #0f172a;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+  @apply bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-purple-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50;
+}
+
+.btn-danger {
+  @apply bg-rose-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-rose-600 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0;
+}
+
+.btn-secondary {
+  @apply bg-slate-200 text-slate-800 px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-slate-300;
+}
+
+.input-field {
+  @apply w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all;
+}

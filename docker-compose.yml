@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   mongodb:
     image: mongo
@@ -26,6 +24,8 @@ services:
       - "8003:8000"
     depends_on:
       - mongodb
+    volumes:
+      - room-photos:/app/uploads
 
   reservation-service:
     build: ./services/reservation-service
@@ -42,3 +42,6 @@ services:
       - auth-service
       - room-service
       - reservation-service
+
+volumes:
+  room-photos:
