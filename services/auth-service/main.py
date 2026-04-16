@@ -12,6 +12,23 @@ users = db["users"]
 SECRET = "SECRET123"
 pwd = CryptContext(schemes=["bcrypt"])
 
+@app.on_event("startup")
+def bootstrap_users():
+    """Create default users on startup if they don't exist."""
+    defaults = [
+        ("admin@example.com", "admin123", "admin"),
+        ("staff@example.com", "staff123", "staff"),
+        ("member@example.com", "member123", "member")
+    ]
+    for email, password, role in defaults:
+        if not users.find_one({"email": email}):
+            print(f"Bootstrapping user: {email} ({role})")
+            users.insert_one({
+                "email": email,
+                "password": pwd.hash(password),
+                "role": role
+            })
+
 @app.post("/register")
 def register(data: dict):
     if users.find_one({"email": data["email"]}):

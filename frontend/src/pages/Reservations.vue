@@ -21,6 +21,7 @@ const slotOccupied = ref(0) // occupied seats for currently-selected slot
 const filterRoom = ref("")
 const filterDate = ref("")
 const filterEmail = ref("")
+const filterHour = ref("")
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const minDate = computed(() => dayjs().add(1, "day").format("YYYY-MM-DD"))
@@ -113,7 +114,8 @@ const filteredReservations = computed(() => {
     const matchRoom  = !filterRoom.value  || r.room_id === filterRoom.value
     const matchEmail = !filterEmail.value || r.user_email.toLowerCase().includes(filterEmail.value.toLowerCase())
     const matchDate  = !filterDate.value  || dayjs(r.start).format("YYYY-MM-DD") === filterDate.value
-    return matchRoom && matchEmail && matchDate
+    const matchHour  = !filterHour.value  || dayjs(r.start).format("HH") === filterHour.value
+    return matchRoom && matchEmail && matchDate && matchHour
   })
 })
 
@@ -121,6 +123,7 @@ const clearFilters = () => {
   filterRoom.value = ""
   filterDate.value = ""
   filterEmail.value = ""
+  filterHour.value = ""
 }
 
 // ── Booking ────────────────────────────────────────────────────────────────
@@ -202,11 +205,19 @@ const formatDate = (ts) => dayjs(ts).format("MMM D, YYYY h:mm A")
         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Calendar</label>
         <input v-model="filterDate" type="date" class="input-field text-sm font-bold text-slate-700 bg-slate-50 border-transparent focus:bg-white focus:border-purple-300" />
       </div>
+      
+      <div class="w-56">
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Hour Period</label>
+        <select v-model="filterHour" class="input-field text-sm font-bold text-slate-700 bg-slate-50 border-transparent focus:bg-white focus:border-purple-300">
+          <option value="">Full Schedule</option>
+          <option v-for="slot in timeSlots" :key="slot.value" :value="slot.value">{{ slot.label }}</option>
+        </select>
+      </div>
 
       <div v-if="!isMember" class="flex-1 min-w-[240px]">
         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Identity</label>
         <div class="relative group">
-          <input v-model="filterEmail" type="text" placeholder="Search by email..." class="input-field !pl-10 text-sm font-bold text-slate-700 bg-slate-50 border-transparent focus:bg-white focus:border-purple-300" />
+          <input v-model="filterEmail" type="text" placeholder="Search by member" class="input-field !pl-10 text-sm font-bold text-slate-700 bg-slate-50 border-transparent focus:bg-white focus:border-purple-300" />
           <svg class="w-4 h-4 absolute left-3 top-3 text-slate-300 group-focus-within:text-purple-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
@@ -325,7 +336,7 @@ const formatDate = (ts) => dayjs(ts).format("MMM D, YYYY h:mm A")
                 <span class="px-4 py-1.5 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-slate-50 text-slate-500">
                   👥 {{ r.group_size || 1 }} person(s)
                 </span>
-                <span v-if="!isMember" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest truncate max-w-[200px]">
+                <span v-if="!isMember" class="text-[10px] font-bold text-black uppercase tracking-widest truncate max-w-[200px]">
                   ID: {{ r.user_email.split('@')[0] }}
                 </span>
               </div>

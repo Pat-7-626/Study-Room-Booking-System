@@ -44,7 +44,7 @@ const performLogin = async () => {
       <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-fuchsia-500/10 blur-3xl rounded-full"></div>
 
       <div class="text-center mb-10 relative z-10">
-        <h1 class="text-4xl font-black text-white mb-2 tracking-tight">Study Space</h1>
+        <h1 class="text-4xl font-black text-white mb-2 tracking-tight">Study Rooms</h1>
         <p class="text-purple-200/80 font-medium">
           {{ isRegistering ? "Create your account" : "Welcome back to your dashboard" }}
         </p>

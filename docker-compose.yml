@@ -43,5 +43,12 @@ services:
       - room-service
       - reservation-service
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api-gateway
+
 volumes:
   room-photos:

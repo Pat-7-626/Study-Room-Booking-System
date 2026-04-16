@@ -1,37 +1,52 @@
 # Study Room Booking System
 
-**Service-Based Web Application**  
+**Fully Containerized Service-Based Web Application**  
 **Author:** Pattharamon Dumrongkittikule 6610545472
-
----
-
-## Table of Contents
-1. [Introduction](#1-introduction)
-2. [System Architecture](#2-system-architecture)
-3. [Core Features & Roles](#3-core-features--roles)
-4. [Key Technical Highlights](#4-key-technical-highlights)
-5. [Technology Stack](#5-technology-stack)
-6. [How to Run the App](#6-how-to-run-the-app)
-7. [How to Run the Tests](#7-how-to-run-the-tests)
-8. [Future Roadmap](#8-future-roadmap)
 
 ---
 
 ## 1. Introduction
 
-The Study Room Booking System is a modular web application designed to streamline the process of reserving study spaces. It replaces manual booking methods with a robust digital platform, ensuring transparency, preventing double-bookings, and optimizing resource usage within educational buildings.
+The Study Room Booking System is a web-based application designed to allow users to efficiently reserve study rooms within a building. The system replaces manual or informal booking methods with a structured digital platform, improving reliability and accessibility.
 
-The system is built using a Service-Based Architecture, ensuring high scalability, maintainability, and clear separation of concerns.
+Built using a **Service-Based Architecture**, the system ensures high scalability, modularity, and maintainability.
 
----
+## 2. Background & Problem
 
-## 2. System Architecture
+In many universities, study room reservations are handled manually or through informal communication methods (paper logs, messaging). This leads to:
+
+- Double booking of rooms
+- Lack of transparency in availability
+- Inefficient use of study rooms
+- Difficulty in tracking reservations
+
+This system addresses these problems by ensuring fair access, preventing conflicts, and providing a centralized platform for better resource utilization.
+
+## 3. Objectives
+
+- **Develop an online platform** for efficient study room reservations.
+- **Enable staff and administrators** to manage room availability dynamically.
+- **Implement role-based access control** to secure system operations.
+
+## 4. Scope
+
+- **Included**: User authentication, Room browsing/availability, Online reservation system, Role-based control.
+- **Not Included**: Payment processing, physical door access control.
+
+## 5. Target Users & Roles
+
+- **Member**: Browse rooms, check live availability, create reservations, cancel personal records.
+- **Staff**: Manage room information (Add/Update/Delete), view all system-wide reservation records.
+- **Administrator**: Full user management (Create/Update/Delete), oversee all rooms and reservations (Create/Update/Delete).
+
+## 6. System Architecture (Service-Based)
 
 The application is composed of independent services communicating behind a central API Gateway.
 
 ```mermaid
 graph TD
-    Client[Frontend Vue.js] --> Gateway[API Gateway]
+    Client[Browser / User] --> FE[Frontend Service]
+    Client --> Gateway[API Gateway]
 
     Gateway --> Auth[Auth Service]
     Gateway --> Room[Room Service]
@@ -44,113 +59,74 @@ graph TD
     User --> DB[(MongoDB)]
 
     Room --> Vol[(Persistent Photos Volume)]
+
+    Room -.->|Internal Sync| Res
 ```
 
-- **API Gateway**: Single entry point. Routes requests and handles inter-service proxying.
-- **Auth Service**: Manages JWT authentication and registration.
-- **Room Service**: CRUD for rooms and persistent photo management.
-- **Reservation Service**: Handles booking logic and conflict prevention.
-- **User Service**: Administrative user management and role assignment.
+- **Frontend**: Vue.js 3 interface served via Nginx.
+- **API Gateway**: Single entry point routing requests to backend services.
+- **Auth Service**: Handles JWT-based identity and registration.
+- **User Service**: Manages user data and Admin operations.
+- **Room Service**: Manages rooms, photo uploads, and operational status.
+- **Reservation Service**: Handles booking logic and **Conflict Prevention** (Capacity summing).
 
----
+## 7. Technology Stack
 
-## 3. Core Features & Roles
-
-### Member
-- **Browse**: Explore available study rooms with live capacity tracking.
-- **Reserve**: Book 1-hour slots for a specific group size.
-- **Manage**: View personal booking history and cancel upcoming slots.
-
-### Staff
-- **Resource Control**: Add, update, or delete study rooms.
-- **Availability**: Manage room status (Available, Maintenance, Closed).
-- **Monitoring**: View all reservation records across the system.
-
-### Administrator
-- **Identity Management**: Full CRUD operations on user accounts.
-- **System Oversight**: Oversee all rooms, reservations, and user roles.
-
----
-
-## 4. Key Technical Highlights
-
-- **Persistent Storage**: Utilizes Docker volumes for both MongoDB data and uploaded room photos.
-- **Conflict Prevention**: Intelligent logic ensures rooms are never over-booked beyond their capacity.
-- **Rich UI**: A premium rich purple interface with glassmorphism effects and responsive layouts.
-- **Secure Auth**: JWT-based authentication ensures data privacy and role enforcement.
-
----
-
-## 5. Technology Stack
-
-- **Frontend**: Vue.js 3, Tailwind CSS
-- **Backend**: FastAPI (Python)
+- **Frontend**: Vue.js, Tailwind CSS, Day.js
+- **Backend**: FastAPI (Python), HTTPX
 - **Database**: MongoDB
-- **DevOps**: Docker & Docker Compose
-- **Utilities**: Day.js, HTTPX
+- **Containerization**: Docker & Docker Compose
+- **Security**: JWT (Authentication), Bcrypt (Password Hashing)
 
----
+## 8. Security & Access Control
 
-## 6. How to Run the App
+- **JWT-based authentication** ensures that tokens carry role identity.
+- **Role-based authorization** protects backend endpoints (e.g., Staff-only room management).
+- **Security Isolation**: Members can only manage their own reservations; Staff/Admins have oversight of all records.
 
-### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+## 9. Key Technical Highlights
 
-### Launch Steps
-1.  **Clone the project**:
-    ```bash
-    git clone https://github.com/Pat-7-626/Study-Room-Booking-System.git
-    cd Study-Room-Booking-System
-    ```
+- **Intelligent Conflict Prevention**: Logic sums `group_size` across all bookings in a specific 1-hour slot and blocks bookings exceeding the room's capacity.
+- **Persistence**: Uses Docker volumes for MongoDB data and uploaded room photos.
+- **Aesthetic Excellence**: A premium "Rich Purple" interface with glassmorphism and responsive design.
 
-2.  **Start all services**:
-    ```bash
-    docker-compose up -d --build
-    ```
+## 10. How to Run the App
 
-3.  **Access the application**:
-    - **Frontend (Web UI)**: `http://localhost:5173`
-    - **Backend (API Gateway)**: `http://localhost:8000`
+The entire system is orchestrated via Docker.
 
-### Default Sign-in Credentials
+1. **Launch the stack**:
+   ```bash
+   docker-compose up -d --build
+   ```
+2. **Access the application**:
+   - **Frontend UI**: `http://localhost:5173`
+   - **API Gateway Docs**: `http://localhost:8000/docs`
+
+### Default Credentials
+
 | Role       | Email                | Password    |
 | :--------- | :------------------- | :---------- |
 | **Admin**  | `admin@example.com`  | `admin123`  |
 | **Staff**  | `staff@example.com`  | `staff123`  |
 | **Member** | `member@example.com` | `member123` |
 
----
+## 11. How to Run the Tests
 
-## 7. How to Run the Tests
-The system includes a comprehensive automated integration test suite that verifies **12 critical scenarios** across all roles and security layers.
+Verify the system with the automated integration suite (12 scenarios):
 
-### Steps to Run Tests
-1. **Verify the app is running**:
-   ```bash
-   docker-compose ps
-   ```
-2. **Setup the test environment**:
-   ```bash
-   pip install -r tests/requirements-test.txt
-   ```
-3. **Execute the automated suite**:
-   ```bash
-   pytest -v tests/integration_test.py
-   ```
+```bash
+pip install -r tests/requirements-test.txt
+pytest -v tests/integration_test.py
+```
 
-### What is verified?
-- **Authentication**: Secure registration and Login flows for all access tiers.
-- **Room Management**: Full lifecycle (Create/Update/Delete) by **Staff** and **Administrators**.
-- **User Management**: Role assignment and account control by **Administrators**.
-- **Booking Flow**: Validated reservations with immediate `res_id` tracking for the client.
-- **Security Isolation**: Guaranteed isolation—**Members** can manage their own records but are strictly blocked from accessing or deleting other users' reservations.
-- **Capacity Enforcement**: Real-time logic to block bookings that exceed a room's physical capacity limit.
+## 12. Limitations & Future Improvements
 
----
+- **Limitations**: No physical access control, requires internet connection.
+- **Future Improvements**:
+  - Add calendar-based UI for slot selection.
+  - Implement real-time updates via WebSockets.
+  - Add an analytics dashboard for room usage statistics.
 
-## 8. Future Roadmap
+## 13. Conclusion
 
-- [ ] Calendar-based UI for intuitive slot selection.
-- [ ] Real-time vacancy updates via WebSockets.
-- [ ] Automated email/push notifications for booking reminders.
-- [ ] Analytics dashboard for room usage statistics.
+The Study Room Booking System provides a structured and efficient solution to reservation problems in educational institutions. By using a service-based architecture, the system ensures scalability, flexibility, and a premium user experience while preventing booking conflicts.

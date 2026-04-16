@@ -140,8 +140,8 @@ onMounted(async () => {
       <div>
         <h1 class="text-3xl font-black text-slate-800 tracking-tight">Study Rooms</h1>
         <p class="text-slate-500 mt-1 font-medium">
-          <template v-if="isMember">Browse available study spaces</template>
-          <template v-else>Manage all study spaces in the building</template>
+          <template v-if="isMember">Browse available study rooms</template>
+          <template v-else>Manage all study rooms in the building</template>
         </p>
       </div>
       <button v-if="canManage" @click="openNew" class="btn-primary flex items-center shadow-lg shadow-purple-200 uppercase tracking-widest text-xs font-black">
@@ -237,7 +237,7 @@ onMounted(async () => {
             class="absolute inset-0 bg-slate-900/40 flex items-center justify-center backdrop-blur-[2px]"
           >
             <span class="bg-white text-slate-900 text-[10px] font-black px-6 py-2 rounded-2xl shadow-2xl uppercase tracking-[0.2em]">
-              {{ r.status === 'Maintenance' ? '🔧 Maintenance' : '🔒 Private' }}
+              {{ r.status === 'Maintenance' ? 'Maintenance' : 'Closed' }}
             </span>
           </div>
         </div>

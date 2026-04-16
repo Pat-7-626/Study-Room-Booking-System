@@ -32,7 +32,7 @@ const logout = () => {
     <!-- Sidebar -->
     <aside class="w-64 bg-white border-r border-slate-200 shadow-sm flex flex-col">
       <div class="p-6 border-b border-slate-100">
-        <h2 class="text-2xl font-black text-purple-600 tracking-tight">Study Space</h2>
+        <h2 class="text-2xl font-black text-purple-600 tracking-tight">Study Rooms</h2>
         <p class="text-xs text-slate-400 mt-1 uppercase font-bold tracking-widest">{{ userRole }} Portal</p>
       </div>
 
